@@ -213,7 +213,7 @@ def rl_process():
 
 if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained('./model/minimind_tokenizer', use_fast=False)
-    print('tokenizer词表大小：', len(tokenizer))
+    print('tokenizer词表大小：', len(tokenizer))##6400；minimind tokenizer 词表大小为6400
 
     ################
     # 1: pretrain

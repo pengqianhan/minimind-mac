@@ -29,11 +29,13 @@ def train_tokenizer():
     # 初始化tokenizer
     tokenizer = Tokenizer(models.BPE())
     tokenizer.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=False)
+    print('Tokenizer initialized.')
 
     # 定义特殊token
     special_tokens = ["<unk>", "<s>", "</s>"]
 
     # 设置训练器并添加特殊token
+    ### 为了训练速度，可以把 6400 降低，比如降为64 (数字不合理，单纯为两训练速度)
     trainer = trainers.BpeTrainer(
         vocab_size=6400,
         special_tokens=special_tokens,  # 确保这三个token被包含
@@ -43,6 +45,13 @@ def train_tokenizer():
 
     # 读取文本数据
     texts = read_texts_from_jsonl(data_path)
+
+    ### 为了训练速度，截取 text 的十分之一 
+    # texts = (text for i, text in enumerate(texts) if i % 10 == 0)
+
+
+
+    print('开始训练tokenizer...')
 
     # 训练tokenizer
     tokenizer.train_from_iterator(texts, trainer=trainer)
@@ -59,7 +68,7 @@ def train_tokenizer():
     tokenizer_dir = "./model/minimind_tokenizer"
     os.makedirs(tokenizer_dir, exist_ok=True)
     tokenizer.save(os.path.join(tokenizer_dir, "tokenizer.json"))
-    tokenizer.model.save("./model/minimind_tokenizer")
+    tokenizer.model.save("./model/minimind_tokenizer")##保存 merges.txt 和 vocab.json
 
     # 手动创建配置文件
     config = {
@@ -119,6 +128,7 @@ def eval_tokenizer():
 
     # 加载预训练的tokenizer
     tokenizer = AutoTokenizer.from_pretrained("./model/minimind_tokenizer")
+    # tokenizer = AutoTokenizer.from_pretrained("./model/minimind_tokenizer_trained")##官方的权重文件
 
     messages = [
         {"role": "system", "content": "你是一个优秀的聊天机器人，总是给我正确的回应！"},
@@ -154,8 +164,8 @@ def eval_tokenizer():
 
 
 def main():
-    # train_tokenizer()
-    eval_tokenizer()
+    # train_tokenizer()## 训练词表
+    eval_tokenizer() ## 测试词表
 
 
 if __name__ == '__main__':
