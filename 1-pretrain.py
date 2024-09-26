@@ -41,6 +41,9 @@ def get_lr(it, all):
 def train_epoch(epoch, wandb):
     start_time = time.time()
     for step, (X, Y) in enumerate(train_loader):
+        ### 为了训练速度，只取前100个step
+        if step > 100:
+            break
         X = X.to(args.device)
         Y = Y.to(args.device)
 
@@ -121,7 +124,8 @@ def init_distributed_mode():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MiniMind Pretraining")
     parser.add_argument("--out_dir", type=str, default="out", help="Output directory")
-    parser.add_argument("--epochs", type=int, default=20, help="Number of epochs")
+    ### 为了训练速度，把epochs 从20降低为1
+    parser.add_argument("--epochs", type=int, default=1, help="Number of epochs")
     parser.add_argument("--batch_size", type=int, default=32, help="Batch size")
     parser.add_argument("--learning_rate", type=float, default=2e-4, help="Learning rate")
     parser.add_argument("--device", type=str, default="cuda:0" if torch.cuda.is_available() else "cpu", help="Device to use")
