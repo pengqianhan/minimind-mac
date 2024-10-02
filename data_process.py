@@ -72,13 +72,16 @@ def process_seq_monkey(chunk_size=50000):
             chunk = list(itertools.islice(reader, chunk_size))
             if not chunk:
                 break
-
+            # print the length of chunk 
+            # print(len(chunk))## = chunk_size
             for idx, obj in enumerate(chunk):
                 try:
                     content = obj.get('text', '')
                     if len(content) > 512:
                         continue
                     text_id = tokenizer(f'{bos_token}{content}{eos_token}').data['input_ids']
+                    # print(text_id['input_ids']==text_id.data['input_ids'])## == True
+                    
                     doc_ids += text_id
                 except UnicodeDecodeError as e:
                     print(f"Skipping invalid line {chunk_idx * chunk_size + idx + 1}: {e}")
@@ -86,6 +89,11 @@ def process_seq_monkey(chunk_size=50000):
 
             chunk_idx += 1
             print(f"Processed chunk {chunk_idx} with {chunk_size} lines")
+
+            ### 为了训练速度，只取前 20 个chunk
+            if chunk_idx > 20:
+                break
+            #####################
 
             if len(doc_ids) > 1000000:
                 arr = np.array(doc_ids, dtype=np.uint16)
@@ -112,6 +120,7 @@ def pretrain_process():
         with open(data_path, 'rb') as f:
             data = np.fromfile(f, dtype=np.uint16)
             data_lst.append(data)
+    # print('len(data_lst):',len(data_lst))##==data_path_list 里文件数量
     arr = np.concatenate(data_lst)
     print(arr.shape)
     with open('./dataset/pretrain_data.bin', 'wb') as f:
@@ -224,6 +233,7 @@ if __name__ == "__main__":
 
     if process_type == 1:
         pretrain_process()
+        ###在dataset目录下生成了pretrain_data.bin和clean_seq_monkey.bin两个文件
     if process_type == 2:
         sft_process(contain_history=False)
     if process_type == 3:
