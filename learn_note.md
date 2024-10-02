@@ -9,6 +9,8 @@
        - if process_type == 1:在dataset目录下生成了pretrain_data.bin和clean_seq_monkey.bin两个文件
        - process_type == 2:
        - process_type == 3:
-2. pretrain.py 预训练model
-   -  使用 ./dataset/pretrain_data.bin 来预训练，直接运行1-pretrain.py即可
-3. 
+2. 1-pretrain.py 预训练model
+   -  使用 ./dataset/pretrain_data.bin 来预训练，直接运行1-pretrain.py即可，运行结束后在./out 目录下保存一个pretrain_512.pth 的模型文件
+3. 3-full_sft.py
+   - 读取 './dataset/sft_data_single.csv' 文件来进行 full sft 训练，运行3-full_sft.py即可，结束后在./out 目录下保存一个 full_sft_512.pth 的模型文件
+   - 读取 './dataset/sft_data_multi.csv' 文件来进行 full sft 训练，运行3-full_sft.py即可，结束后在./out 目录下保存一个 full_sft_512.pth 的模型文件

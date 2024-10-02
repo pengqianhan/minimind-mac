@@ -45,8 +45,15 @@ def get_lr(it, all):
 def train_epoch(epoch, wandb):
     start_time = time.time()
     for step, (X, Y, loss_mask) in enumerate(train_loader):
+        ### 为了训练速度，只取前（args.save_interval+2）个step
+        if step > args.save_interval+2:
+            break
+
+
         X = X.to(args.device)
         Y = Y.to(args.device)
+        # print('X:', X.shape)##(batch_size=32,511)
+        # print('Y:', Y.shape)##(batch_size=32,511)   
         loss_mask = loss_mask.to(args.device)
         lr = get_lr(epoch * iter_per_epoch + step, args.epochs * iter_per_epoch)
         for param_group in optimizer.param_groups:
@@ -141,7 +148,8 @@ def init_distributed_mode():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MiniMind Full SFT")
     parser.add_argument("--out_dir", type=str, default="out", help="Output directory")
-    parser.add_argument("--epochs", type=int, default=19, help="Number of epochs")
+    ### 为了训练速度，把epochs 从19降低为1 
+    parser.add_argument("--epochs", type=int, default=1, help="Number of epochs")
     parser.add_argument("--batch_size", type=int, default=32, help="Batch size")
     parser.add_argument("--learning_rate", type=float, default=1e-4, help="Learning rate")
     parser.add_argument("--device", type=str, default="cuda:0" if torch.cuda.is_available() else "cpu", help="Device to use")
@@ -153,8 +161,12 @@ if __name__ == "__main__":
     parser.add_argument("--accumulation_steps", type=int, default=1, help="Gradient accumulation steps")
     parser.add_argument("--grad_clip", type=float, default=1.0, help="Gradient clipping threshold")
     parser.add_argument("--warmup_iters", type=int, default=0, help="Number of warmup iterations")
-    parser.add_argument("--log_interval", type=int, default=100, help="Logging interval")
-    parser.add_argument("--save_interval", type=int, default=1000, help="Model saving interval")
+    # parser.add_argument("--log_interval", type=int, default=100, help="Logging interval")
+    # parser.add_argument("--save_interval", type=int, default=1000, help="Model saving interval")
+
+    ### 为了训练速度，把 log_interval 从100降低为10把save_interval 从1000降低为50
+    parser.add_argument("--log_interval", type=int, default=10, help="Logging interval")
+    parser.add_argument("--save_interval", type=int, default=50, help="Model saving interval")
 
     args = parser.parse_args()
 
@@ -185,6 +197,7 @@ if __name__ == "__main__":
     model, tokenizer = init_model()
 
     df = pd.read_csv('./dataset/sft_data_single.csv')
+    # df = pd.read_csv('./dataset/sft_data_multi.csv')
     df = df.sample(frac=1.0)
     train_ds = SFTDataset(df, tokenizer, max_length=max_seq_len)
     train_sampler = DistributedSampler(train_ds) if ddp else None

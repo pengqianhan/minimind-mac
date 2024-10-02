@@ -69,15 +69,24 @@ def process_seq_monkey(chunk_size=50000):
 
     with jsonlines.open('./dataset/mobvoi_seq_monkey_general_open_corpus.jsonl') as reader:
         while True:
+            
+            '''
+            读取文件代码工作流程
+            1.打开 JSON Lines 文件。
+            2.使用 itertools.islice 从文件中读取 chunk_size 行。
+            3.将读取的行转换为字典，并存储在 chunk 列表中。
+            4.如果读取到的 chunk 为空，则退出循环。
+            '''
             chunk = list(itertools.islice(reader, chunk_size))
             if not chunk:
                 break
             # print the length of chunk 
             # print(len(chunk))## = chunk_size
+            # print('chunk:',chunk)## 字符
             for idx, obj in enumerate(chunk):
                 try:
                     content = obj.get('text', '')
-                    if len(content) > 512:
+                    if len(content) > 512:##如果长度大于512，跳过
                         continue
                     text_id = tokenizer(f'{bos_token}{content}{eos_token}').data['input_ids']
                     # print(text_id['input_ids']==text_id.data['input_ids'])## == True
@@ -229,7 +238,7 @@ if __name__ == "__main__":
     # 2: sft
     # 3: RL
     ################
-    process_type = 1
+    process_type = 2
 
     if process_type == 1:
         pretrain_process()
