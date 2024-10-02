@@ -20,8 +20,13 @@ def init_model(lm_config):
     model_from = 1  # 1从权重，2用transformers
 
     if model_from == 1:
+        print('从预训练权重加载模型')
         moe_path = '_moe' if lm_config.use_moe else ''
         ckp = f'./out/pretrain_{lm_config.dim}{moe_path}.pth'
+
+        ## 加载从百度网盘下载的minimind-v1-small模型权重
+        
+        # ckp = f'./out/minimind-v1-small/full_sft_512.pth'
 
         model = Transformer(lm_config)
         state_dict = torch.load(ckp, map_location=device)
