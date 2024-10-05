@@ -24,4 +24,6 @@
    - [学习资料](https://zhuanlan.zhihu.com/p/672999750)
    - [peft 库](https://github.com/huggingface/peft)
 
-
+6. 5-dpo_train.py
+   - 在[hugging face](https://huggingface.co/datasets/jingyaogong/minimind_dataset/tree/main/dpo) 下载 dpo_dpo_zh_demo.json，然后放在'./dataset/dpo/'
+   - 

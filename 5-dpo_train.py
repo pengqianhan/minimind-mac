@@ -21,12 +21,17 @@ def find_all_linear_names(model):
 
 
 def init_model():
-    device = 'cuda:0'
+    # device = 'cuda:0'
+    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     # Do model patching and add fast LoRA weights
-    model_name_or_path = "minimind"
-    tokenizer_name_or_path = "minimind"
+    # model_name_or_path = "minimind"
+    # tokenizer_name_or_path = "minimind"
+    ### 为了训练速度，这里使用了小模型，实际应用中可以使用更大的模型
+    model_name_or_path = "minimind-v1-small"
+    tokenizer_name_or_path = "minimind-v1-small"
     model = AutoModelForCausalLM.from_pretrained(model_name_or_path, trust_remote_code=True)
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_name_or_path, trust_remote_code=True, use_fast=False)
+    # tokenizer = AutoTokenizer.from_pretrained(tokenizer_name_or_path, trust_remote_code=True, use_fast=False)
+    tokenizer = AutoTokenizer.from_pretrained('./model/minimind_tokenizer')
     tokenizer.pad_token = tokenizer.eos_token
     target_modules = find_all_linear_names(model)
     peft_config = LoraConfig(
@@ -53,7 +58,9 @@ if __name__ == '__main__':
     # Dataset
     ################
     # 确保路径正确，文件存在
-    dataset_path = './dataset/dpo/train_data.json'
+    # dataset_path = './dataset/dpo/train_data.json'
+    ### 改为本地设置的路径，dpo_dpo_zh_demo.json 是在huggingface上下载的数据集
+    dataset_path = './dataset/dpo/dpo_dpo_zh_demo.json'
 
     # 加载数据集
     train_dataset = load_dataset('json', data_files=dataset_path)
