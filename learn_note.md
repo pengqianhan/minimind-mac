@@ -19,8 +19,9 @@
 5. 4-lora_sft.py 
    - git clone https://huggingface.co/jingyaogong/minimind-v1-small
    - 在 https://huggingface.co/jingyaogong/minimind-v1-small/tree/main 下载 pytorch_model.bin， 然后放到 ./minimind_v1_small 目录下
-   - 然后运行4-lora_sft.py即可
+   - 然后运行4-lora_sft.py即可,运行结束会在out文件夹下保存‘adapter_config.json’ 和 'adapter_model.safetensors'
    - note: 直接下载huggingface的模型，会报错，暂时没找到解决方法，因此下载模型到本地运行
    - [学习资料](https://zhuanlan.zhihu.com/p/672999750)
+   - [peft 库](https://github.com/huggingface/peft)
 
 

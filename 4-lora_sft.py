@@ -91,6 +91,7 @@ def train_epoch(epoch, wandb):
                            "epoch_Time": spend_time / (step + 1) * iter_per_epoch // 60 - spend_time // 60})
 
         if (step + 1) % args.save_interval == 0:
+            # only saves the incremental   PEFT weights (adapter_model.bin) that were trained, meaning it is super efficient to store, transfer, and load.
             model.save_pretrained(args.save_dir)
 
 
