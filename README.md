@@ -25,6 +25,9 @@
 
 </div>
 
+
+* 🎺 [Mac 运行代码教程](learn_note_mac.md)
+  
 * 本开源项目旨在完全从0开始，最快仅用3小时！即可训练出仅为26M大小的微型语言模型**MiniMind**。
 * **MiniMind**极其轻量，体积约是 GPT3 的 $\frac{1}{7000}$，力求做到最普通的个人GPU也可快速推理甚至训练。
 * **MiniMind**改进自DeepSeek-V2、Llama3结构，项目包含整个数据处理、pretrain、sft、dpo的全部阶段，包含混合专家(MoE)模型。
