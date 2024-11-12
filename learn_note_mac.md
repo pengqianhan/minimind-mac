@@ -29,3 +29,4 @@
 6. 5-dpo_train.py
    - 在[hugging face](https://huggingface.co/datasets/jingyaogong/minimind_dataset/tree/main/dpo) 下载 dpo_dpo_zh_demo.json，然后放在'./dataset/dpo/'
    - 这部分代码还没跑通
+   - [学习资料](https://zhuanlan.zhihu.com/p/642569664)
